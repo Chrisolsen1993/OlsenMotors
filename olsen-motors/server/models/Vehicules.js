@@ -16,6 +16,10 @@ const vehiculesSchema = new Schema({
     type: String,
     required: true,
   },
+  vin: {
+    type: String,
+    required: true,
+  },
   description: {
     type: String,
     required: true,
@@ -29,9 +33,14 @@ const vehiculesSchema = new Schema({
     min: 0.99,
   },
 
-  category: {
+  categoryId: {
     type: Schema.Types.ObjectId,
     ref: "Category",
+    required: true,
+  },
+  conditionId: {
+    type: Schema.Types.ObjectId,
+    ref: "Conditions",
     required: true,
   },
   commentId: [
