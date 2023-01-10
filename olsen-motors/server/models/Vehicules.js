@@ -24,11 +24,15 @@ const vehiculesSchema = new Schema({
     type: String,
     required: true,
   },
-  Photo: {
+  color: {
+    type: String,
+    required: true,
+  },
+  photo: {
     type: String,
   },
   price: {
-    type: Number,
+    type: String,
     required: true,
     min: 0.99,
   },
@@ -49,10 +53,9 @@ const vehiculesSchema = new Schema({
       ref: "Comment",
     },
   ],
-  user: {
+  userId: {
     type: Schema.Types.ObjectId,
     ref: "User",
-    required: true,
   },
 });
 
