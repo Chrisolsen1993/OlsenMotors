@@ -1,4 +1,4 @@
-const db = require("../config/connection");
+const db = require("./connection");
 
 const { faker } = require("@faker-js/faker");
 const {
@@ -17,12 +17,12 @@ db.once("open", async () => {
   await Category.deleteMany();
   // create 6 categories
   const categories = await Category.insertMany([
-    { catName: "SEDANS" },
-    { catName: "SUVs" },
-    { catName: "TRUCKS" },
-    { catName: "VANS" },
-    { catName: "MOTORCYCLES" },
-    { depName: "BOATS" },
+    { name: "SEDANS" },
+    { name: "SUVs" },
+    { name: "TRUCKS" },
+    { name: "VANS" },
+    { name: "MOTORCYCLES" },
+    { name: "BOATS" },
   ]);
   console.log("categories seeded");
 
@@ -65,21 +65,12 @@ db.once("open", async () => {
   const users = await User.create(fakeUsers);
 
   console.log("users seeded");
-  // REACTIONS
-  await Reaction.deleteMany();
-
-  const fakeReactions = [];
-
-  for (let i = 0; i < 20; i++) {
-    let randomUser = Math.floor(Math.random() * users.length);
-    fakeLike = { like: true, noLike: false, userId: users[randomUser]._id };
-    fakeReactions.push(fakeLike);
-  }
+  //  Conditions
 
   const conditions = await Conditions.insertMany([
-    { conditionType: "MECHANICAL" },
-    { conditionType: "RUN AND DRIVE" },
-    { conditionType: "ENGINE START" },
+    { name: "MECHANICAL" },
+    { name: "RUN AND DRIVE" },
+    { name: "ENGINE START" },
   ]);
   console.log("Vehicules Conditions seeded");
   // COMMENTS
