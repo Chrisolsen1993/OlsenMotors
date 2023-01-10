@@ -1,167 +1,198 @@
-// const db = require("./connection");
-// const { User, Product, Category } = require("../models");
+const db = require("./connection");
 
-// db.once("open", async () => {
-//   await Category.deleteMany();
+const { faker } = require("@faker-js/faker");
+const {
+  User,
+  Comment,
+  Category,
+  Conditions,
+  Conversation,
+  Message,
+  Vehicules,
+} = require("../models");
 
-//   const categories = await Category.insertMany([
-//     { name: "Animals" },
-//     { name: "Games" },
-//     { name: "Dolls" },
-//     { name: "Books" },
-//     { name: "Lego" },
-//   ]);
+db.once("open", async () => {
+  // Category
+  // delete any previous Categories entries
+  await Category.deleteMany();
+  // create 6 categories
+  const categories = await Category.insertMany([
+    { name: "SEDANS" },
+    { name: "SUVs" },
+    { name: "TRUCKS" },
+    { name: "VANS" },
+    { name: "MOTORCYCLES" },
+    { name: "BOATS" },
+  ]);
+  console.log("categories seeded");
 
-//   console.log("categories seeded");
+  // USERS
+  await User.deleteMany();
 
-//   await Product.deleteMany();
+  const fakeUsers = [];
 
-//   const products = await Product.insertMany([
-//     {
-//       name: "Toy Story",
-//       description:
-//         "The Toys that appear within the Toy Story universe are able to animate to life. Toys have a unique biology, psychology and culture compared to humans..",
-//       image: "/images/cookie-tin.jpg",
-//       category: categories[0]._id,
-//       price: 2.99,
-//       quantity: 500,
-//       user: "620a9c97f6e2df516838b2b5",
-//     },
-//     {
-//       name: "Sulley–Monsters",
-//       description: "Bright and bushy, the spotted star of Disney and Pixar",
-//       image: "/images/canned-coffee.jpg",
-//       category: categories[0]._id,
-//       price: 1.99,
-//       quantity: 500,
-//       user: "620a9c97f6e2df516838b2b5",
-//     },
-//     {
-//       name: "Minions",
-//       category: categories[1]._id,
-//       description:
-//         "This super soft, cute and collectable stuffy will be the best versatile toy.",
-//       image: "/images/toilet-paper.jpg",
-//       price: 7.99,
-//       quantity: 20,
-//       user: "620a9c97f6e2df516838b2b5",
-//     },
-//     {
-//       name: "Mickey",
-//       category: categories[1]._id,
-//       description:
-//         "These timeless characters are made with amazing detail and feature soft deluxe fabrics!.",
-//       image: "/images/soap.jpg",
-//       price: 3.99,
-//       quantity: 50,
-//       user: "620a9c97f6e2df516838b2b5",
-//     },
-//     {
-//       name: "Magic Hair Elf Dwarf Troll",
-//       category: categories[1]._id,
-//       description:
-//         "POP Movie Cartoon Magic Hair Elf Dwarf Troll Orange Pink Blue Model Vinyl Action Figure PVC Doll Birthday Collection Toys.",
-//       image: "/images/wooden-spoons.jpg",
-//       price: 14.99,
-//       quantity: 100,
-//       user: "620a9c97f6e2df516838b2b5",
-//     },
-//     {
-//       name: "Mattel&Star Wars",
-//       category: categories[2]._id,
-//       description:
-//         'Perfect for any collector, this adorable, Yoda-like plush stands at 11" tall..',
-//       image: "/images/camera.jpg",
-//       price: 399.99,
-//       quantity: 30,
-//       user: "620a9c97f6e2df516838b2b5",
-//     },
-//     {
-//       name: "Mr. Potato",
-//       category: categories[2]._id,
-//       description:
-//         "The Mr. Potato Head toy encourages kids to use their imaginations for lots of creative play when they mix and match the parts and pieces.",
-//       image: "/images/tablet.jpg",
-//       price: 199.99,
-//       quantity: 30,
-//       user: "620a9c97f6e2df516838b2b5",
-//     },
-//     {
-//       name: "Bath Ducky",
-//       category: categories[3]._id,
-//       description:
-//         "White Hot Safety Disc reveals the word HOT in white when bath water is too hot for baby (104 degrees Fahrenheit and above) Fun, easy to grasp size and shape Water tight to prevent sinking and squirting.",
-//       image: "/images/bedtime-book.jpg",
-//       price: 9.99,
-//       quantity: 100,
-//       user: "620a9c97f6e2df516838b2b5",
-//     },
-//     {
-//       name: "Minnie",
-//       category: categories[4]._id,
-//       description:
-//         "Disney Junior Mickey Mouse Funhouse Singing Fun Minnie Mouse Plush.",
-//       image: "/images/spinning-top.jpg",
-//       price: 1.99,
-//       quantity: 1000,
-//       user: "620a9c97f6e2df516838b2b5",
-//     },
-//     {
-//       name: "Shrek",
-//       category: categories[4]._id,
-//       description:
-//         "32cm Shrek Plush Stuffed Animal Doll Pillow Soft Sleeping Toys Movies TV Collectible Toy.",
-//       image: "/images/plastic-horses.jpg",
-//       price: 2.99,
-//       quantity: 1000,
-//       user: "620a9c97f6e2df516838b2b5",
-//     },
-//     {
-//       name: "Maui",
-//       category: categories[4]._id,
-//       description:
-//         "Collect your favorite Disney Princess characters. Each sold separately.",
-//       image: "/images/teddy-bear.jpg",
-//       price: 7.99,
-//       quantity: 100,
-//       user: "620a9c97f6e2df516838b2b5",
-//     },
-//     {
-//       name: "Tiger",
-//       category: categories[4]._id,
-//       description:
-//         'Disney Tiger Plush From Winnie the Pooh 20" Tall by Mattel.',
-//       image: "/images/alphabet-blocks.jpg",
-//       price: 9.99,
-//       quantity: 600,
-//       user: "620a9c97f6e2df516838b2b5",
-//     },
-//   ]);
+  const testUser = {
+    firstName: "test",
+    middleName: "test",
+    lastName: "test",
+    avatar: "",
+    email: "testemail@gmail.com",
+    password: "12345678",
+    address: "123 Test St, Test",
+    phoneNumber: "123-456-7890",
+  };
+  fakeUsers.push(testUser);
 
-//   console.log("products seeded");
+  for (let i = 0; i < 20; i++) {
+    firstname = faker.name.firstName();
+    lastname = faker.name.lastName();
 
-//   await User.deleteMany();
+    const fakeUser = {
+      firstName: firstname,
+      middleName: faker.name.middleName(),
+      lastName: lastname,
+      avatar: "",
+      email: firstname + lastname + "@gmail.com",
+      password: "12345678",
 
-//   await User.create({
-//     firstName: "Pamela",
-//     lastName: "Washington",
-//     email: "pamela@testmail.com",
-//     password: "password12345",
-//     orders: [
-//       {
-//         products: [products[0]._id, products[0]._id, products[1]._id],
-//       },
-//     ],
-//   });
+      phoneNumber: faker.phone.number(),
+      address: faker.address.streetAddress(),
+    };
 
-//   await User.create({
-//     firstName: "Elijah",
-//     lastName: "Holt",
-//     email: "eholt@testmail.com",
-//     password: "password12345",
-//   });
+    fakeUsers.push(fakeUser);
+  }
 
-//   console.log("users seeded");
+  const users = await User.create(fakeUsers);
 
-//   process.exit();
-// });
+  console.log("users seeded");
+  //  Conditions
+
+  const conditions = await Conditions.insertMany([
+    { name: "MECHANICAL" },
+    { name: "RUN AND DRIVE" },
+    { name: "ENGINE START" },
+  ]);
+  console.log("Vehicules Conditions seeded");
+  // COMMENTS
+  await Comment.deleteMany();
+  const comments = await Comment.insertMany([
+    {
+      comment: "Nice car, let's get in touch!",
+      userId: users[Math.floor(Math.random() * users.length)]._id,
+    },
+    {
+      comment:
+        "I  messaged you about your post please respond at your soonest convenience.",
+      userId: users[Math.floor(Math.random() * users.length)]._id,
+    },
+    {
+      comment: "Nice bike!",
+      userId: users[Math.floor(Math.random() * users.length)]._id,
+    },
+    {
+      comment: "Hey do this car has a mechanical problem",
+      userId: users[Math.floor(Math.random() * users.length)]._id,
+    },
+  ]);
+
+  console.log("comments seeded");
+  // POSTS
+  await Vehicules.deleteMany();
+
+  //   let applyAllGrades = [];
+  //   grades.map((grade) => applyAllGrades.push(grade._id));
+
+  const vehicules = await Vehicules.insertMany([
+    {
+      make: "Toyota",
+      year: "2010",
+      model: "Camry xle",
+      color: "Gold",
+      vin: "JHIDIDD12525ETX",
+      photo: "",
+      price: "$12000",
+      categoryId: categories[0].id,
+      conditionId:
+        conditions[Math.floor(Math.random() * conditions.length)]._id,
+      description: "Car in good shape but need a little work ",
+      userId: users[Math.floor(Math.random() * users.length)]._id,
+      commentId: comments[Math.floor(Math.random() * comments.length)]._id,
+    },
+
+    {
+      make: "Toyota",
+      year: "2018",
+      model: "Rav4",
+      color: "Silver",
+      vin: "JHIDI31525ETX",
+      photo: "",
+      price: "$15000",
+      categoryId: categories[1].id,
+      conditionId:
+        conditions[Math.floor(Math.random() * conditions.length)]._id,
+      description: "Price negociable ",
+      userId: users[Math.floor(Math.random() * users.length)]._id,
+      commentId: comments[Math.floor(Math.random() * comments.length)]._id,
+    },
+    {
+      make: "Chevrolet",
+      year: "2005",
+      model: "Silverado 1500",
+      color: "White",
+      vin: "JHIDIEX525ETX",
+      photo: "",
+      price: "$7000",
+      categoryId: categories[2].id,
+      conditionId: conditions[0]._id,
+      description: "Nice pick up truck but needs some work ",
+      userId: users[Math.floor(Math.random() * users.length)]._id,
+      commentId: comments[Math.floor(Math.random() * comments.length)]._id,
+    },
+    {
+      make: "Chevrolet",
+      year: "2006",
+      model: "Express cargo van ",
+      color: "Black",
+      vin: "JHIDI12525ETX",
+      photo: "",
+      price: "$3000",
+      categoryId: categories[3].id,
+      conditionId: conditions[1]._id,
+      description: "Van will not move for some reason shoot your offer ",
+      userId: users[Math.floor(Math.random() * users.length)]._id,
+      commentId: comments[Math.floor(Math.random() * comments.length)]._id,
+    },
+    {
+      make: "Venom X22R",
+      year: "2022",
+      model: "250CC MOTORCYCLE",
+      color: "Red",
+      vin: "123456QGHBDY",
+      photo: "",
+      price: "$3000",
+      categoryId: categories[4].id,
+      conditionId:
+        conditions[Math.floor(Math.random() * conditions.length)]._id,
+      description: "Good one ",
+      userId: users[Math.floor(Math.random() * users.length)]._id,
+      commentId: comments[Math.floor(Math.random() * comments.length)]._id,
+    },
+    {
+      make: "MasterCraft ",
+      year: "2017",
+      model: "XT23",
+      color: "Black",
+      vin: "JHIDIDD12525ETX",
+      photo: "",
+      price: "$120000",
+      categoryId: categories[5].id,
+      conditionId: conditions[1]._id,
+      description: "I love this boat ready to be shipped ",
+      userId: users[Math.floor(Math.random() * users.length)]._id,
+      commentId: comments[Math.floor(Math.random() * comments.length)]._id,
+    },
+  ]);
+  console.log("Vehicules seeded");
+
+  process.exit();
+});
