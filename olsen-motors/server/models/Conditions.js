@@ -10,6 +10,6 @@ const conditionsSchema = new Schema({
   },
 });
 
-const Conditions = mongoose.model("Conditions", categorySchema);
+const Conditions = mongoose.model("Conditions", conditionsSchema);
 
 module.exports = Conditions;
